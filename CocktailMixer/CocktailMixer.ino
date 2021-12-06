@@ -59,9 +59,9 @@ int taskLength;
 void setup() {
     Serial.begin(115200);
 
-    Serial.println("|==============================================|");
-    Serial.println("|  Cocktailmixer v1.0 by Marc, Marco and Alex  |");
-    Serial.println("|==============================================|");
+    Serial.println("|================================================|");
+    Serial.println("|  Cocktailmixer v1.0.1 by Marc, Marco and Alex  |");
+    Serial.println("|================================================|");
 
     // Init buttons
     pinMode(LEFT_BTN_GPIO, INPUT_PULLUP);
