@@ -8,16 +8,40 @@ body{
 
     font-size: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background-color: #282C34;
+    color: white;
 
     form{
-        display: flex;
-        flex-direction: column;
-        width: 250px;
-        margin: auto;
-        margin-top: 50px;
+        width: 850px;
+        display: inline-block;
+        margin-top: 150px;
 
-        label{
-            margin-top: 20px;
+        .labels{
+            display: flex;
+            margin-left: 105px;
+
+            label:nth-child(n+2){
+                margin-left: 125px;
+            }
+        }
+
+        select{
+            font-size: 16px;
+            width: 150px;
+            text-align: center;
+        }
+
+        select:nth-child(n+2){
+            margin-left: 50px;
+        }
+
+        input{
+            width: 150px;
+            margin-top: 50px;
+            padding: 5px 20px;
+            font-size: 16px;
+            font-weight: bold;
         }
     }
 

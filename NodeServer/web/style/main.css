@@ -8,22 +8,43 @@
 body {
   font-size: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  background-color: #282C34;
+  color: white;
 }
 
 body form {
+  width: 850px;
+  display: inline-block;
+  margin-top: 150px;
+}
+
+body form .labels {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  width: 250px;
-  margin: auto;
-  margin-top: 50px;
+  margin-left: 105px;
 }
 
-body form label {
-  margin-top: 20px;
+body form .labels label:nth-child(n+2) {
+  margin-left: 125px;
+}
+
+body form select {
+  font-size: 16px;
+  width: 150px;
+  text-align: center;
+}
+
+body form select:nth-child(n+2) {
+  margin-left: 50px;
+}
+
+body form input {
+  width: 150px;
+  margin-top: 50px;
+  padding: 5px 20px;
+  font-size: 16px;
+  font-weight: bold;
 }
 /*# sourceMappingURL=main.css.map */
