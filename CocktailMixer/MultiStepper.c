@@ -1,7 +1,7 @@
-#include "MultiStepper.h"
-
 #include <Arduino.h>
 #include <stdio.h>
+
+#include "MultiStepper.h"
 
 struct Motor {
     int ports[4];
@@ -45,6 +45,9 @@ bool initMotor(int id, int *ports) {
 
     // Initialize the ports
     for (int i = 0; i < 4; i++) {
+        if(ports[i] <= 0){
+            return false;
+        }
         motors[id].ports[i] = ports[i];
         pinMode(ports[i], OUTPUT);
     }

@@ -2,6 +2,14 @@
 
 #include "MultiStepper.h"
 
+// stepper distances
+#define X_DIST_1 200
+#define X_DIST_2 100
+#define X_DIST_3 100
+
+#define Y_DIST_1 100
+#define Y_DIST_2 100
+
 // State definitions:
 #define STATE_ERROR -1
 #define STATE_TEST 0
@@ -44,17 +52,18 @@ typedef struct {
     int steps;
     int speed;
     int interruptBtnId;
+    int delayAfter;
 } Task;
 
-Task drink_ginTonic[4] = {{X_MOTOR_ID, -400, 10, RIGHT_BTN_ID},
-                          {Y_MOTOR_ID, 20, 10, TOP_BTN_ID},
-                          {Y_MOTOR_ID, -20, 10, BOTTOM_BTN_ID},
-                          {X_MOTOR_ID, -200, 10, RIGHT_BTN_ID}};
+Task drink_ginTonic[4] = {{X_MOTOR_ID, -400, 10, RIGHT_BTN_ID, 0},
+                          {Y_MOTOR_ID, 20, 10, TOP_BTN_ID, 4000},
+                          {Y_MOTOR_ID, -20, 10, BOTTOM_BTN_ID, 0},
+                          {X_MOTOR_ID, -200, 10, RIGHT_BTN_ID, 0}};
 
-Task drink_water[4] = {{X_MOTOR_ID, -400, 10, RIGHT_BTN_ID},
-                       {Y_MOTOR_ID, 20, 10, TOP_BTN_ID},
-                       {Y_MOTOR_ID, -20, 10, BOTTOM_BTN_ID},
-                       {X_MOTOR_ID, -400, 10, RIGHT_BTN_ID}};
+Task drink_water[4] = {{X_MOTOR_ID, -400, 10, RIGHT_BTN_ID, 0},
+                       {Y_MOTOR_ID, 20, 10, TOP_BTN_ID, 4000},
+                       {Y_MOTOR_ID, -20, 10, BOTTOM_BTN_ID, 0},
+                       {X_MOTOR_ID, -400, 10, RIGHT_BTN_ID, 0}};
 
 Task *curTasks;
 int curTask;
@@ -64,7 +73,7 @@ void setup() {
     Serial.begin(115200);
 
     Serial.println("|================================================|");
-    Serial.println("|  Cocktailmixer v1.0.1 by Marc, Marco and Alex  |");
+    Serial.println("|  Cocktailmixer v1.1.0 by Marc, Marco and Alex  |");
     Serial.println("|================================================|");
 
     // Init buttons
@@ -100,8 +109,8 @@ void setup() {
 }
 
 // State machine
-// int state = STATE_TEST;
-int state = STATE_READY;
+int state = STATE_TEST;
+// int state = STATE_READY;
 bool changedState = true;
 
 void loop() {
@@ -136,10 +145,12 @@ void loop() {
     }
 }
 
+// The arduino is listening on thr serial port and
+// gets controlled by it
 void stateControlledHandler() {
     if (changedState) {
         changedState = false;
-        Serial.println("1");
+        Serial.println("42");
     }
 
     static int motorId = -1;
@@ -151,7 +162,13 @@ void stateControlledHandler() {
         int motorState = moveMotor(motorId, speed);
 
         if (bd_getButton(interruptBtnId) == LOW) {
+            setStepsToGo(motorId, 0);
+
+            Serial.println(getPosition(motorId));
+            motorId = -1;
         } else if (motorState == 0 || motorState == -1) {
+            Serial.println(getPosition(motorId));
+            motorId = -1;
         }
     } else if (Serial.available()) {
         char buffer[20];
@@ -166,7 +183,11 @@ void stateControlledHandler() {
         Serial.print(speed);
         Serial.print(interruptBtnId);
 
-        setStepsToGo(motorId, steps);
+        if (motorId == -1 && steps >= 0) {
+            delay(steps);
+        } else {
+            setStepsToGo(motorId, steps);
+        }
     }
 }
 
@@ -189,12 +210,12 @@ void stateTestHandler() {
     }
 
     if (bd_getButton(BOTTOM_BTN_ID) == LOW) {
-        setStepsToGo(Y_MOTOR_ID, 12);
+        setStepsToGo(Y_MOTOR_ID, -12);
         moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
     }
 
     if (bd_getButton(TOP_BTN_ID) == LOW) {
-        setStepsToGo(Y_MOTOR_ID, -12);
+        setStepsToGo(Y_MOTOR_ID, 12);
         moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
     }
 
@@ -216,22 +237,24 @@ void stateErrorHandler() {
 void stateCalibrateHandler() {
     if (changedState) {
         changedState = false;
+        setStepsToGo(Y_MOTOR_ID, 10);
     }
 
     // setStepsToGo(X_MOTOR_ID, 1400);
     // setStepsToGo(Y_MOTOR_ID, 1100);
 
-    /*
-    if (bd_getButton(BOTTOM_BTN_GPIO) == 0) {
-        setStepsToGo(Y_MOTOR_ID, 10);
-        moveMotor(Y_MOTOR_ID, X_MOTOR_SPEED);
-    } else
-    */
+    static bool yMotorCalibrated = false;
 
-    if (bd_getButton(LEFT_BTN_ID) == HIGH) {
-        // Stop the y motor
-        setStepsToGo(Y_MOTOR_ID, 0);
-
+    if (!yMotorCalibrated) {
+        if(bd_getButton(bd_getButton(BOTTOM_BTN_ID) == HIGH){
+            setStepsToGo(Y_MOTOR_ID, 10);
+            moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
+        }else{
+            yMotorCalibrated = true;
+            // Stop the y motor
+            setStepsToGo(Y_MOTOR_ID, 0);
+        }
+    } else if (bd_getButton(LEFT_BTN_ID) == HIGH) {
         // Move the motor
         setStepsToGo(X_MOTOR_ID, 10);
         moveMotor(X_MOTOR_ID, X_MOTOR_SPEED);
@@ -324,16 +347,12 @@ void stateWorkingHandler() {
         curTask = 0;
     }
 
-    Serial.println(sizeof(curTasks));
-    Serial.println(sizeof(curTasks[0]));
-    Serial.println(sizeof(curTasks) / sizeof(curTasks[0]));
-    Serial.println(curTask);
-
     int motorState =
         moveMotor(curTasks[curTask].motorId, curTasks[curTask].speed);
 
     if (motorState == 0 || motorState == -1 ||
         bd_getButton(curTasks[curTask].interruptBtnId) == LOW) {
+        delay(curTasks[curTask].delayAfter);
         curTask++;
         if (curTask >= taskLength) {
             changedState = true;
