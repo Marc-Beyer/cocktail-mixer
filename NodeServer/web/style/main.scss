@@ -1,0 +1,76 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background-color: #282C34;
+    color: white;
+
+    form{
+        width: 850px;
+        display: inline-block;
+        margin-top: 150px;
+
+        .labels{
+            display: flex;
+            margin-left: 105px;
+
+            label:nth-child(n+2){
+                margin-left: 125px;
+            }
+        }
+
+        select{
+            font-size: 16px;
+            width: 150px;
+            text-align: center;
+        }
+
+        select:nth-child(n+2){
+            margin-left: 50px;
+        }
+
+        input[type='submit']{
+            width: 150px;
+            margin-top: 150px;
+            padding: 5px 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    }
+
+    h1{
+        margin-top: 50px;
+    }
+
+    ul{
+
+        list-style: none;
+
+        li:first-child{
+            margin-top: 30px;
+        }
+
+        li:nth-child(n+2){
+            margin-top: 15px;
+        }
+
+        button{
+            width: 200px;
+            padding: 5px 20px;
+            font-size: 16px;
+        }
+
+    }
+
+    @media (max-width: 900px){
+        
+    }
+
+}

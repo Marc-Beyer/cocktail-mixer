@@ -1,1 +1,72 @@
-/* No CSS *//*# sourceMappingURL=main.css.map */
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  background-color: #282C34;
+  color: white;
+}
+
+body form {
+  width: 850px;
+  display: inline-block;
+  margin-top: 150px;
+}
+
+body form .labels {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: 105px;
+}
+
+body form .labels label:nth-child(n+2) {
+  margin-left: 125px;
+}
+
+body form select {
+  font-size: 16px;
+  width: 150px;
+  text-align: center;
+}
+
+body form select:nth-child(n+2) {
+  margin-left: 50px;
+}
+
+body form input[type='submit'] {
+  width: 150px;
+  margin-top: 150px;
+  padding: 5px 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+body h1 {
+  margin-top: 50px;
+}
+
+body ul {
+  list-style: none;
+}
+
+body ul li:first-child {
+  margin-top: 30px;
+}
+
+body ul li:nth-child(n+2) {
+  margin-top: 15px;
+}
+
+body ul button {
+  width: 200px;
+  padding: 5px 20px;
+  font-size: 16px;
+}
+/*# sourceMappingURL=main.css.map */
