@@ -3,11 +3,12 @@ const SerialPort = require("serialport");
 const Readline = require("@serialport/parser-readline");
 const path = require("path");
 const fs = require("fs");
+const { isGeneratorFunction } = require("util/types");
 
 const app = express();
 const port = 4242;
 
-const arduinoSerielPort = new SerialPort("COM5", { baudRate: 115200 });
+const arduinoSerielPort = new SerialPort("COM3", { baudRate: 115200 });
 const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
 let cocktails = [];
@@ -44,7 +45,7 @@ app.get("/configuration", (req, res) => {
     console.log(req.query);
 
     let cocktailSrcFile = fs.readFileSync("./files/cocktails.json");
-    let cocktails = JSON.parse(cocktailSrcFile).filter((elem)=>{
+    cocktails = JSON.parse(cocktailSrcFile).filter((elem)=>{
         return elem.liquids.every((element) => {
             console.log(element.name, station);
             return station.includes(element.name);
@@ -61,7 +62,7 @@ app.get("/configuration", (req, res) => {
 
 
 app.get("/get-cocktails", (req, res) => {
-    res.send(cocktails);
+    res.send(JSON.stringify(cocktails));
 });
 
 app.get("/", (req, res) => {
@@ -69,6 +70,17 @@ app.get("/", (req, res) => {
         res.sendFile(path.join(__dirname, "/web/index.html"));
     }else{
         res.sendFile(path.join(__dirname, "/web/index.html"));
+    }
+});
+
+app.get("/", () => {
+    let name = req.query?.name;
+    isGeneratorFunction(name){
+        arduinoSerielPort.write(name, function(err) {
+            if (err) {
+                console.log(err.message);
+            }
+        });
     }
 });
 
