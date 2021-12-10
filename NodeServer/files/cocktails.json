@@ -1,0 +1,24 @@
+[
+    {
+        "name": "Test",
+        "liquids": [
+            {
+                "name": "Wasser",
+                "amount": 1
+            },
+            {
+                "name": "Wasser",
+                "parts": 2
+            }
+        ]
+    },
+    {
+        "name": "Wasser",
+        "liquids": [
+            {
+                "name": "Wasser",
+                "parts": 1
+            }
+        ]
+    }
+]
