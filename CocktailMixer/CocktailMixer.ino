@@ -21,16 +21,16 @@
 
 // Micro switch buttons
 #define LEFT_BTN_ID 0
-#define LEFT_BTN_GPIO 2
+#define LEFT_BTN_GPIO 10
 
 #define RIGHT_BTN_ID 1
-#define RIGHT_BTN_GPIO 3
+#define RIGHT_BTN_GPIO 11
 
-#define TOP_BTN_ID 2
-#define TOP_BTN_GPIO 4
+#define BOTTOM_BTN_ID 2
+#define BOTTOM_BTN_GPIO 12
 
-#define BOTTOM_BTN_ID 3
-#define BOTTOM_BTN_GPIO 5
+#define TOP_BTN_ID 3
+#define TOP_BTN_GPIO 13
 
 // Stepper motors
 #define X_MOTOR_ID 0
@@ -43,8 +43,8 @@ int xMotorPorts[4] = {39, 38, 41, 40};
 int yMotorPorts[4] = {47, 46, 49, 48};
  */
 
-int xMotorPorts[4] = {39, 38, 41, 40};
-int yMotorPorts[4] = {47, 46, 49, 48};
+int xMotorPorts[4] = {3, 2, 5, 4};
+int yMotorPorts[4] = {7, 6, 9, 8};
 
 // Drinks
 typedef struct {
@@ -55,15 +55,28 @@ typedef struct {
     int delayAfter;
 } Task;
 
-Task drink_ginTonic[4] = {{X_MOTOR_ID, -400, 10, RIGHT_BTN_ID, 0},
-                          {Y_MOTOR_ID, 20, 10, TOP_BTN_ID, 4000},
-                          {Y_MOTOR_ID, -20, 10, BOTTOM_BTN_ID, 0},
-                          {X_MOTOR_ID, -200, 10, RIGHT_BTN_ID, 0}};
+#define X_DIV_1 145
+#define X_DIV_2 520
 
-Task drink_water[4] = {{X_MOTOR_ID, -400, 10, RIGHT_BTN_ID, 0},
-                       {Y_MOTOR_ID, 20, 10, TOP_BTN_ID, 4000},
-                       {Y_MOTOR_ID, -20, 10, BOTTOM_BTN_ID, 0},
-                       {X_MOTOR_ID, -400, 10, RIGHT_BTN_ID, 0}};
+#define Y_DIV 350
+
+Task drink_ginTonic[12] = {{X_MOTOR_ID, X_DIV_1, 10, RIGHT_BTN_ID, 100},
+                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100},
+                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 1000},
+                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100},
+                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 1000},
+                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100},
+                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 1000},
+                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100}};
+
+Task drink_water[4] = {{X_MOTOR_ID, 400, 10, RIGHT_BTN_ID, 0},
+                       {Y_MOTOR_ID, -20, 10, RIGHT_BTN_ID, 4000},
+                       {Y_MOTOR_ID, 20, 10, BOTTOM_BTN_ID, 0},
+                       {X_MOTOR_ID, 400, 10, RIGHT_BTN_ID, 0}};
 
 Task *curTasks;
 int curTask;
@@ -79,14 +92,15 @@ void setup() {
     // Init buttons
     pinMode(LEFT_BTN_GPIO, INPUT_PULLUP);
     pinMode(RIGHT_BTN_GPIO, INPUT_PULLUP);
-    pinMode(TOP_BTN_GPIO, INPUT_PULLUP);
     pinMode(BOTTOM_BTN_GPIO, INPUT_PULLUP);
+    pinMode(TOP_BTN_GPIO, INPUT_PULLUP);
 
+    // Currently only 3
     bd_init(4);
     bd_setButton(LEFT_BTN_ID, LEFT_BTN_GPIO, 20);
     bd_setButton(RIGHT_BTN_ID, RIGHT_BTN_GPIO, 20);
-    bd_setButton(TOP_BTN_ID, TOP_BTN_GPIO, 20);
     bd_setButton(BOTTOM_BTN_ID, BOTTOM_BTN_GPIO, 20);
+    bd_setButton(TOP_BTN_ID, TOP_BTN_GPIO, 20);
 
     // Init stepper-motors
 
@@ -200,12 +214,12 @@ void stateTestHandler() {
     }
 
     if (bd_getButton(LEFT_BTN_ID) == LOW) {
-        setStepsToGo(X_MOTOR_ID, -12);
+        setStepsToGo(X_MOTOR_ID, 12);
         moveMotor(X_MOTOR_ID, X_MOTOR_SPEED);
     }
 
     if (bd_getButton(RIGHT_BTN_ID) == LOW) {
-        setStepsToGo(X_MOTOR_ID, 12);
+        setStepsToGo(X_MOTOR_ID, -12);
         moveMotor(X_MOTOR_ID, X_MOTOR_SPEED);
     }
 
@@ -214,10 +228,13 @@ void stateTestHandler() {
         moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
     }
 
+    // Currently not in use
+    /*
     if (bd_getButton(TOP_BTN_ID) == LOW) {
         setStepsToGo(Y_MOTOR_ID, 12);
         moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
     }
+    */
 
     if (bd_getButton(LEFT_BTN_ID) == LOW && bd_getButton(RIGHT_BTN_ID) == LOW) {
         changedState = false;
@@ -238,6 +255,7 @@ void stateCalibrateHandler() {
     if (changedState) {
         changedState = false;
         setStepsToGo(Y_MOTOR_ID, 10);
+        Serial.println("Calibration...");
     }
 
     // setStepsToGo(X_MOTOR_ID, 1400);
@@ -246,23 +264,26 @@ void stateCalibrateHandler() {
     static bool yMotorCalibrated = false;
 
     if (!yMotorCalibrated) {
-        if(bd_getButton(bd_getButton(BOTTOM_BTN_ID) == HIGH){
+        if (bd_getButton(BOTTOM_BTN_ID) == HIGH) {
             setStepsToGo(Y_MOTOR_ID, 10);
             moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
-        }else{
+        } else {
             yMotorCalibrated = true;
             // Stop the y motor
             setStepsToGo(Y_MOTOR_ID, 0);
+            shutdownMotor(0);
         }
     } else if (bd_getButton(LEFT_BTN_ID) == HIGH) {
         // Move the motor
-        setStepsToGo(X_MOTOR_ID, 10);
+        setStepsToGo(X_MOTOR_ID, -10);
         moveMotor(X_MOTOR_ID, X_MOTOR_SPEED);
     } else {
         // Stop the motor and set it's position to zero
         setStepsToGo(X_MOTOR_ID, 0);
         setPosition(X_MOTOR_ID, 0);
         setPosition(Y_MOTOR_ID, 0);
+        shutdownMotor(1);
+        yMotorCalibrated = false;
 
         state = STATE_READY;
         changedState = true;
@@ -299,6 +320,13 @@ void stateReadyHandler() {
                 Serial.println("|=========================|");
                 Serial.println("|        Gin Tonic        |");
                 Serial.println("|=========================|");
+
+                curTasks = drink_ginTonic;
+                curTask = 0;
+                taskLength = sizeof(drink_ginTonic) / sizeof(drink_ginTonic[0]);
+
+                changedState = true;
+                state = STATE_WORKING;
                 break;
             case 2:
                 Serial.println("|=========================|");
@@ -307,7 +335,7 @@ void stateReadyHandler() {
                 break;
             case 3:
                 Serial.println("|=========================|");
-                Serial.println("|       Pina Colada       |");
+                Serial.println("|    Sex on the beach     |");
                 Serial.println("|=========================|");
                 break;
             case 4:
@@ -315,9 +343,9 @@ void stateReadyHandler() {
                 Serial.println("|         Wasser          |");
                 Serial.println("|=========================|");
 
-                curTasks = drink_ginTonic;
+                curTasks = drink_water;
                 curTask = 0;
-                taskLength = sizeof(drink_ginTonic) / sizeof(drink_ginTonic[0]);
+                taskLength = sizeof(drink_water) / sizeof(drink_water[0]);
 
                 changedState = true;
                 state = STATE_WORKING;
@@ -350,15 +378,16 @@ void stateWorkingHandler() {
     int motorState =
         moveMotor(curTasks[curTask].motorId, curTasks[curTask].speed);
 
-    if (motorState == 0 || motorState == -1 ||
+    if (motorState == 1 || motorState == -1 ||
         bd_getButton(curTasks[curTask].interruptBtnId) == LOW) {
         delay(curTasks[curTask].delayAfter);
+        shutdownMotor(curTasks[curTask].motorId);
         curTask++;
         if (curTask >= taskLength) {
             changedState = true;
             state = STATE_CALIBRATE;
         } else {
-            setStepsToGo(curTasks[curTask].motorId, curTasks[0].steps);
+            setStepsToGo(curTasks[curTask].motorId, curTasks[curTask].steps);
         }
     }
 }

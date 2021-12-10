@@ -1,7 +1,7 @@
+#include "MultiStepper.h"
+
 #include <Arduino.h>
 #include <stdio.h>
-
-#include "MultiStepper.h"
 
 struct Motor {
     int ports[4];
@@ -45,7 +45,7 @@ bool initMotor(int id, int *ports) {
 
     // Initialize the ports
     for (int i = 0; i < 4; i++) {
-        if(ports[i] <= 0){
+        if (ports[i] <= 0) {
             return false;
         }
         motors[id].ports[i] = ports[i];
@@ -125,4 +125,10 @@ void setStepsToGo(int id, long steps) {
     }
 
     motors[id].stepsToGo = steps;
+}
+
+void shutdownMotor(int id) {
+    for (int i = 0; i < 4; i++) {
+        digitalWrite(motors[id].ports[i], LOW);
+    }
 }

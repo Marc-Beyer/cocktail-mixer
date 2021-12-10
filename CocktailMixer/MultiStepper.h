@@ -29,6 +29,9 @@ long getStepsToGo(int id);
 // Define how far the motor with the id should move
 void setStepsToGo(int id, long steps);
 
+// Set all motor-ports to LOW
+void shutdownMotor(int id);
+
 #ifdef __cplusplus
 }
 #endif
