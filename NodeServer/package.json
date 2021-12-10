@@ -4,12 +4,16 @@
   "description": "An web-interface for the cocktail mixer",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "start-dev": "nodemon index.js"
   },
   "author": "Marc Beyer",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
     "serialport": "^9.2.8"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
