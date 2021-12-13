@@ -43,7 +43,9 @@ int xMotorPorts[4] = {39, 38, 41, 40};
 int yMotorPorts[4] = {47, 46, 49, 48};
  */
 
+//int xMotorPorts[4] = {1, 4, 2, 3};
 int xMotorPorts[4] = {3, 2, 5, 4};
+//int xMotorPorts[4] = {2, 3, 4, 5};
 int yMotorPorts[4] = {7, 6, 9, 8};
 
 // Drinks
@@ -216,16 +218,18 @@ void stateTestHandler() {
     if (bd_getButton(LEFT_BTN_ID) == LOW) {
         setStepsToGo(X_MOTOR_ID, 12);
         moveMotor(X_MOTOR_ID, X_MOTOR_SPEED);
-    }
-
-    if (bd_getButton(RIGHT_BTN_ID) == LOW) {
+    } else if (bd_getButton(RIGHT_BTN_ID) == LOW) {
         setStepsToGo(X_MOTOR_ID, -12);
         moveMotor(X_MOTOR_ID, X_MOTOR_SPEED);
+    } else {
+        shutdownMotor(X_MOTOR_ID);
     }
 
     if (bd_getButton(BOTTOM_BTN_ID) == LOW) {
         setStepsToGo(Y_MOTOR_ID, -12);
         moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
+    } else {
+        shutdownMotor(Y_MOTOR_ID);
     }
 
     // Currently not in use
@@ -239,6 +243,8 @@ void stateTestHandler() {
     if (bd_getButton(LEFT_BTN_ID) == LOW && bd_getButton(RIGHT_BTN_ID) == LOW) {
         changedState = false;
         state = STATE_CALIBRATE;
+        shutdownMotor(X_MOTOR_ID);
+        shutdownMotor(Y_MOTOR_ID);
         delay(1000);
     }
 }
@@ -258,9 +264,6 @@ void stateCalibrateHandler() {
         Serial.println("Calibration...");
     }
 
-    // setStepsToGo(X_MOTOR_ID, 1400);
-    // setStepsToGo(Y_MOTOR_ID, 1100);
-
     static bool yMotorCalibrated = false;
 
     if (!yMotorCalibrated) {
@@ -271,7 +274,7 @@ void stateCalibrateHandler() {
             yMotorCalibrated = true;
             // Stop the y motor
             setStepsToGo(Y_MOTOR_ID, 0);
-            shutdownMotor(0);
+            shutdownMotor(Y_MOTOR_ID);
         }
     } else if (bd_getButton(LEFT_BTN_ID) == HIGH) {
         // Move the motor
@@ -282,7 +285,7 @@ void stateCalibrateHandler() {
         setStepsToGo(X_MOTOR_ID, 0);
         setPosition(X_MOTOR_ID, 0);
         setPosition(Y_MOTOR_ID, 0);
-        shutdownMotor(1);
+        shutdownMotor(X_MOTOR_ID);
         yMotorCalibrated = false;
 
         state = STATE_READY;
