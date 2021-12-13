@@ -20,5 +20,19 @@
                 "parts": 1
             }
         ]
+    },
+    {
+        "name": "Rum Cola",
+        "liquids": [
+            {
+                "name": "Rum",
+                "parts": 1
+            },
+            
+            {
+                "name": "Cola",
+                "parts": 3
+            }
+        ]
     }
 ]
