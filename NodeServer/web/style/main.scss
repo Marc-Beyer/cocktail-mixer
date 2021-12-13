@@ -1,42 +1,46 @@
-*{
+$main-color: #282c34;
+$secondary-color: #1b212e;
+
+$main-font-color: #f5f5f5;
+
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-body{
-
+body {
     font-size: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    background-color: #282C34;
-    color: white;
+    background-color: $main-color;
+    color: $main-font-color;
 
-    form{
+    form {
         width: 850px;
         display: inline-block;
         margin-top: 150px;
 
-        .labels{
+        .labels {
             display: flex;
             margin-left: 105px;
 
-            label:nth-child(n+2){
+            label:nth-child(n + 2) {
                 margin-left: 125px;
             }
         }
 
-        select{
+        select {
             font-size: 16px;
             width: 150px;
             text-align: center;
         }
 
-        select:nth-child(n+2){
+        select:nth-child(n + 2) {
             margin-left: 50px;
         }
 
-        input[type='submit']{
+        input[type="submit"] {
             width: 150px;
             margin-top: 150px;
             padding: 5px 20px;
@@ -45,32 +49,46 @@ body{
         }
     }
 
-    h1{
+    h1 {
         margin-top: 50px;
     }
 
-    ul{
-
+    ul {
         list-style: none;
 
-        li:first-child{
+        li {
+            margin: 16px;
+        }
+
+        /*
+        li:first-child {
             margin-top: 30px;
         }
 
-        li:nth-child(n+2){
-            margin-top: 15px;
+        li:nth-child(n + 2) {
+            margin-top: 16px;
         }
+        */
 
-        button{
-            width: 200px;
-            padding: 5px 20px;
+        button {
+            width: 100%;
             font-size: 16px;
+            padding: 16px;
+
+            background-color: $secondary-color;
+            color: $main-font-color;
+            border: none;
         }
-
     }
+}
 
-    @media (max-width: 900px){
-        
+@media screen and (max-width: 900px) {
+    body {
+        ul {
+            button {
+                width: 200px;
+                b
+            }
+        }
     }
-
 }

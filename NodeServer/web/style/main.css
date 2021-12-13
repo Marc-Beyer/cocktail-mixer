@@ -7,10 +7,10 @@
 
 body {
   font-size: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
-  background-color: #282C34;
-  color: white;
+  background-color: #282c34;
+  color: #f5f5f5;
 }
 
 body form {
@@ -26,7 +26,7 @@ body form .labels {
   margin-left: 105px;
 }
 
-body form .labels label:nth-child(n+2) {
+body form .labels label:nth-child(n + 2) {
   margin-left: 125px;
 }
 
@@ -36,11 +36,11 @@ body form select {
   text-align: center;
 }
 
-body form select:nth-child(n+2) {
+body form select:nth-child(n + 2) {
   margin-left: 50px;
 }
 
-body form input[type='submit'] {
+body form input[type="submit"] {
   width: 150px;
   margin-top: 150px;
   padding: 5px 20px;
@@ -54,19 +54,33 @@ body h1 {
 
 body ul {
   list-style: none;
+  /*
+        li:first-child {
+            margin-top: 30px;
+        }
+
+        li:nth-child(n + 2) {
+            margin-top: 16px;
+        }
+        */
 }
 
-body ul li:first-child {
-  margin-top: 30px;
-}
-
-body ul li:nth-child(n+2) {
-  margin-top: 15px;
+body ul li {
+  margin: 16px;
 }
 
 body ul button {
-  width: 200px;
-  padding: 5px 20px;
+  width: 100%;
   font-size: 16px;
+  padding: 16px;
+  background-color: #1b212e;
+  color: #f5f5f5;
+  border: none;
+}
+
+@media (max-width: 600px) {
+  body button {
+    width: 200px;
+  }
 }
 /*# sourceMappingURL=main.css.map */
