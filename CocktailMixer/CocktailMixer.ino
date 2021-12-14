@@ -34,9 +34,11 @@
 
 // Stepper motors
 #define X_MOTOR_ID 0
-#define X_MOTOR_SPEED 6
+#define X_MOTOR_SPEED 1
+#define X_MOTOR_CONF_SPEED 1
 #define Y_MOTOR_ID 1
-#define Y_MOTOR_SPEED 10
+#define Y_MOTOR_SPEED 1
+#define Y_MOTOR_CONF_SPEED 6
 
 /*
 int xMotorPorts[4] = {39, 38, 41, 40};
@@ -58,28 +60,35 @@ typedef struct {
 } Task;
 
 #define X_DIV_1 145
-#define X_DIV_2 520
+#define X_DIV_2 500
 
-#define Y_DIV 600
-#define Y_DIV_1 700
+#define Y_DIV 675
+#define Y_DIV_1 950
 
-Task drink_ginTonic[12] = {{X_MOTOR_ID, X_DIV_1, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, -Y_DIV_1, 10, RIGHT_BTN_ID, 6000},
-                           {Y_MOTOR_ID, Y_DIV_1 * 2, 10, BOTTOM_BTN_ID, 2000},
-                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 5000},
-                           {Y_MOTOR_ID, Y_DIV * 2, 10, BOTTOM_BTN_ID, 2000},
-                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 5000},
-                           {Y_MOTOR_ID, Y_DIV * 2, 10, BOTTOM_BTN_ID, 2000},
-                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 5000},
-                           {Y_MOTOR_ID, Y_DIV * 2, 10, BOTTOM_BTN_ID, 2000}};
+Task drink_ginTonic[12] = {{X_MOTOR_ID, X_DIV_1,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
+                           {Y_MOTOR_ID, -Y_DIV_1, Y_MOTOR_SPEED, RIGHT_BTN_ID,  6000},
+                           {Y_MOTOR_ID, Y_DIV_1,  Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
+                           {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
+                           {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  5000},
+                           {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
+                           {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
+                           {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  5000},
+                           {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
+                           {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
+                           {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  5000},
+                           {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000}};
 
-Task drink_water[4] = {{X_MOTOR_ID, X_DIV_1, 10, RIGHT_BTN_ID, 0},
-                       {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
-                       {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 6000},
-                       {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 4000}};
+Task drink_water[4] = {{X_MOTOR_ID, X_DIV_1,  X_MOTOR_SPEED, RIGHT_BTN_ID,  0},
+                       {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
+                       {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  6000},
+                       {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 4000}};
+                       
+Task drink_abstandTest[4] = {{X_MOTOR_ID, X_DIV_1, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
+                             {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
+                             {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
+                             {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000}};
+
+                       
 
 Task *curTasks;
 int curTask;
@@ -270,7 +279,7 @@ void stateCalibrateHandler() {
     if (!yMotorCalibrated) {
         if (bd_getButton(BOTTOM_BTN_ID) == HIGH) {
             setStepsToGo(Y_MOTOR_ID, 10);
-            moveMotor(Y_MOTOR_ID, Y_MOTOR_SPEED);
+            moveMotor(Y_MOTOR_ID, Y_MOTOR_CONF_SPEED);
         } else {
             yMotorCalibrated = true;
             // Stop the y motor
@@ -280,7 +289,7 @@ void stateCalibrateHandler() {
     } else if (bd_getButton(LEFT_BTN_ID) == HIGH) {
         // Move the motor
         setStepsToGo(X_MOTOR_ID, -10);
-        moveMotor(X_MOTOR_ID, X_MOTOR_SPEED);
+        moveMotor(X_MOTOR_ID, X_MOTOR_CONF_SPEED);
     } else {
         // Stop the motor and set it's position to zero
         setStepsToGo(X_MOTOR_ID, 0);
@@ -341,6 +350,13 @@ void stateReadyHandler() {
                 Serial.println("|=========================|");
                 Serial.println("|    Sex on the beach     |");
                 Serial.println("|=========================|");
+
+                curTasks = drink_abstandTest;
+                curTask = 0;
+                taskLength = sizeof(drink_abstandTest) / sizeof(drink_abstandTest[0]);
+
+                changedState = true;
+                state = STATE_WORKING;
                 break;
             case 4:
                 Serial.println("|=========================|");
