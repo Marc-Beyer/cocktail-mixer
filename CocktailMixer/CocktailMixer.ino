@@ -188,7 +188,7 @@ void stateControlledHandler() {
             motorId = -1;
         }
     } else if (Serial.available()) {
-        char buffer[20];
+        char buffer[40];
         int n = Serial.readBytesUntil('\n', buffer, sizeof(buffer) - 1);
         buffer[n] = '\0';
 

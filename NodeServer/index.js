@@ -1,18 +1,21 @@
+const motorPath = require("./motorPath");
+
 const express = require("express");
 const SerialPort = require("serialport");
 const Readline = require("@serialport/parser-readline");
 const path = require("path");
 const fs = require("fs");
-
 const bodyParser = require("body-parser");
+
 const app = express();
+const port = 4242;
+
 app.use(bodyParser.json());
 app.use(
     bodyParser.urlencoded({
         extended: true,
     })
 );
-const port = 4242;
 
 try {
     //const arduinoSerielPort = new SerialPort("COM3", { baudRate: 115200 });
@@ -103,10 +106,13 @@ app.get("/request-cocktail", (req, res) => {
         return element.name == name;
     });
 
-    if(cocktail){
+    if (cocktail) {
         //TODO send data to arduino
+        let path = motorPath.getPathFromCocktail(station, cocktail);
+        console.log("path", path);
+
         res.send(cocktail);
-    }else{
+    } else {
         res.send(`
         <h1>Cocktail "${name}" nicht gefunden!</h1>
         <a href="/">zurück</a>
