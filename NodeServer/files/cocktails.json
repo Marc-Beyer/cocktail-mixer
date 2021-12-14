@@ -8,7 +8,7 @@
             },
             {
                 "name": "Wasser",
-                "parts": 2
+                "amount": 2
             }
         ]
     },
@@ -17,7 +17,7 @@
         "liquids": [
             {
                 "name": "Wasser",
-                "parts": 1
+                "amount": 1
             }
         ]
     },
@@ -26,12 +26,12 @@
         "liquids": [
             {
                 "name": "Rum",
-                "parts": 1
+                "amount": 1
             },
             
             {
                 "name": "Cola",
-                "parts": 3
+                "amount": 3
             }
         ]
     }

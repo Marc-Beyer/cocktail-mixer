@@ -183,17 +183,25 @@ void stateControlledHandler() {
     static int steps = -1;
     static int speed = -1;
     static int interruptBtnId = -1;
+    static int delayAfter = 0;
 
     if (motorId >= 0) {
         int motorState = moveMotor(motorId, speed);
 
         if (bd_getButton(interruptBtnId) == LOW) {
             setStepsToGo(motorId, 0);
+            shutdownMotor(motorId);
 
             Serial.println(getPosition(motorId));
+            delay(delayAfter);
+        
             motorId = -1;
         } else if (motorState == 0 || motorState == -1) {
+            shutdownMotor(motorId);
+            
             Serial.println(getPosition(motorId));
+            delay(delayAfter);
+
             motorId = -1;
         }
     } else if (Serial.available()) {
@@ -201,8 +209,8 @@ void stateControlledHandler() {
         int n = Serial.readBytesUntil('\n', buffer, sizeof(buffer) - 1);
         buffer[n] = '\0';
 
-        sscanf(buffer, "%d:%d:%d:%d", &motorId, &steps, &speed,
-               &interruptBtnId);
+        sscanf(buffer, "%d:%d:%d:%d:%d", &motorId, &steps, &speed,
+               &interruptBtnId, &delayAfter);
 
         Serial.print(motorId);
         Serial.print(steps);
