@@ -36,7 +36,7 @@
 #define X_MOTOR_ID 0
 #define X_MOTOR_SPEED 6
 #define Y_MOTOR_ID 1
-#define Y_MOTOR_SPEED 6
+#define Y_MOTOR_SPEED 10
 
 /*
 int xMotorPorts[4] = {39, 38, 41, 40};
@@ -60,25 +60,26 @@ typedef struct {
 #define X_DIV_1 145
 #define X_DIV_2 520
 
-#define Y_DIV 350
+#define Y_DIV 600
+#define Y_DIV_1 700
 
-Task drink_ginTonic[12] = {{X_MOTOR_ID, X_DIV_1, 10, RIGHT_BTN_ID, 100},
-                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100},
-                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 1000},
-                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100},
-                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 1000},
-                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100},
-                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 1000},
-                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 2000},
-                           {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 100}};
+Task drink_ginTonic[12] = {{X_MOTOR_ID, X_DIV_1, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, -Y_DIV_1, 10, RIGHT_BTN_ID, 6000},
+                           {Y_MOTOR_ID, Y_DIV_1 * 2, 10, BOTTOM_BTN_ID, 2000},
+                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 5000},
+                           {Y_MOTOR_ID, Y_DIV * 2, 10, BOTTOM_BTN_ID, 2000},
+                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 5000},
+                           {Y_MOTOR_ID, Y_DIV * 2, 10, BOTTOM_BTN_ID, 2000},
+                           {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
+                           {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 5000},
+                           {Y_MOTOR_ID, Y_DIV * 2, 10, BOTTOM_BTN_ID, 2000}};
 
-Task drink_water[4] = {{X_MOTOR_ID, 400, 10, RIGHT_BTN_ID, 0},
-                       {Y_MOTOR_ID, -20, 10, RIGHT_BTN_ID, 4000},
-                       {Y_MOTOR_ID, 20, 10, BOTTOM_BTN_ID, 0},
-                       {X_MOTOR_ID, 400, 10, RIGHT_BTN_ID, 0}};
+Task drink_water[4] = {{X_MOTOR_ID, X_DIV_1, 10, RIGHT_BTN_ID, 0},
+                       {X_MOTOR_ID, X_DIV_2, 10, RIGHT_BTN_ID, 2000},
+                       {Y_MOTOR_ID, -Y_DIV, 10, RIGHT_BTN_ID, 6000},
+                       {Y_MOTOR_ID, Y_DIV, 10, BOTTOM_BTN_ID, 4000}};
 
 Task *curTasks;
 int curTask;
@@ -383,8 +384,8 @@ void stateWorkingHandler() {
 
     if (motorState == 1 || motorState == -1 ||
         bd_getButton(curTasks[curTask].interruptBtnId) == LOW) {
-        delay(curTasks[curTask].delayAfter);
         shutdownMotor(curTasks[curTask].motorId);
+        delay(curTasks[curTask].delayAfter);
         curTask++;
         if (curTask >= taskLength) {
             changedState = true;

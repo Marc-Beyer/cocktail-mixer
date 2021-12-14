@@ -1,7 +1,7 @@
 const buttonList = document.querySelector(".buttons");
-const requestString = requestHTTP("localhost/4242/get-cocktails");
+const requestString = requestHTTP("/get-cocktails");
 
-console.log(buttonList);
+console.log(requestString);
 
 let drinkArray = JSON.parse(requestString);
 

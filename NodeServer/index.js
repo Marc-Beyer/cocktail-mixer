@@ -3,7 +3,6 @@ const SerialPort = require("serialport");
 const Readline = require("@serialport/parser-readline");
 const path = require("path");
 const fs = require("fs");
-const { isGeneratorFunction } = require("util/types");
 
 const bodyParser = require("body-parser");
 const app = express();
@@ -39,16 +38,6 @@ console.log(liquids);
 /*
     ENDPOINTS
 */
-app.get("/send", (req, res) => {
-    const cocktailName = req.query.cocktail;
-    let cocktail = cocktails.find((element) => {
-        return element.name == cocktailName;
-    });
-
-    if (cocktail) {
-    }
-});
-
 app.post("/configuration", (req, res) => {
     station[0] = req.body?.s1;
     station[1] = req.body?.s2;
@@ -68,6 +57,14 @@ app.post("/configuration", (req, res) => {
     console.log(cocktails);
 
     res.sendFile(path.join(__dirname, "/web/index.html"));
+});
+
+app.get("/configuration", (req, res) => {
+    if (station && station.length > 0) {
+        res.sendFile(path.join(__dirname, "/web/index.html"));
+    } else {
+        res.sendFile(path.join(__dirname, "/web/configuration.html"));
+    }
 });
 
 app.get("/get-cocktails", (req, res) => {
@@ -94,13 +91,35 @@ app.get("/scripts/configuration.js", (req, res) => {
     res.sendFile(path.join(__dirname, "/web/scripts/configuration.js"));
 });
 
-app.get("/", () => {
+app.get("/scripts/main.js", (req, res) => {
+    res.sendFile(path.join(__dirname, "/web/scripts/main.js"));
+});
+
+app.get("/request-cocktail", (req, res) => {
     let name = req.query?.name;
+    console.log("Cocktail:", name);
+
+    let cocktail = cocktails.find((element) => {
+        return element.name == name;
+    });
+
+    if(cocktail){
+        //TODO send data to arduino
+        res.send(cocktail);
+    }else{
+        res.send(`
+        <h1>Cocktail "${name}" nicht gefunden!</h1>
+        <a href="/">zurück</a>
+        `);
+    }
+
+    /*
     arduinoSerielPort.write(name, function (err) {
         if (err) {
             console.log(err.message);
         }
     });
+    */
 });
 
 // Start webserver
