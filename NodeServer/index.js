@@ -12,8 +12,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 4242;
 
-//const arduinoSerielPort = new SerialPort("COM3", { baudRate: 115200 });
-//const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
+const arduinoSerielPort = new SerialPort("COM5", { baudRate: 115200 });
+const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
 let curPathPos = 0;
 let curPath = [];
@@ -25,7 +25,7 @@ app.use(
     })
 );
 
-/*
+
 try {
     arduinoSerielPort.on("open", () => {
         console.log("serial port open");
@@ -33,6 +33,17 @@ try {
 
     parser.on("data", (data) => {
         console.log("Data from Arduino:", data);
+
+        if(data.startsWith("Choose a cocktail")){
+            console.log("Send to Arduino: 42");
+            arduinoSerielPort.write("42", function (err) {
+                if (err) {
+                    console.log(err.message);
+                }
+            });
+
+            return;
+        }
 
         curPathPos++;
 
@@ -48,7 +59,7 @@ try {
 } catch (error) {
     console.log("TEST");
 }
-*/
+
 
 let liquids = fs.readFileSync("./files/liquids.json", "utf8");
 let cocktails = [];

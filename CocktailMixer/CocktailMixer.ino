@@ -192,15 +192,15 @@ void stateControlledHandler() {
             setStepsToGo(motorId, 0);
             shutdownMotor(motorId);
 
-            Serial.println(getPosition(motorId));
             delay(delayAfter);
+            Serial.println(getPosition(motorId));
         
             motorId = -1;
-        } else if (motorState == 0 || motorState == -1) {
+        } else if (motorState == 1 || motorState == -1) {
             shutdownMotor(motorId);
             
-            Serial.println(getPosition(motorId));
             delay(delayAfter);
+            Serial.println(getPosition(motorId));
 
             motorId = -1;
         }
@@ -218,6 +218,10 @@ void stateControlledHandler() {
         Serial.print(interruptBtnId);
 
         if (motorId == -1 && steps >= 0) {
+            changedState = false;
+            state = STATE_CALIBRATE;
+            shutdownMotor(X_MOTOR_ID);
+            shutdownMotor(Y_MOTOR_ID);
             delay(steps);
         } else {
             setStepsToGo(motorId, steps);
@@ -325,6 +329,7 @@ void stateReadyHandler() {
         Serial.println("|  3  |  Pina Colada      |");
         Serial.println("|  4  |  Wasser           |");
         Serial.println("|=========================|");
+        Serial.println("Choose a cocktail");
     }
 
     if (Serial.available()) {

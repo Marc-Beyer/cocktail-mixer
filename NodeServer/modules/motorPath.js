@@ -10,8 +10,8 @@ const Y_MOTOR_ID = 1;
 const X_MOTOR_SPEED = 1;
 const Y_MOTOR_SPEED = 1;
 
-const LONG_DELAY = 6000;
-const MEDIUM_DELAY = 2000;
+const LONG_DELAY = 4000;
+const MEDIUM_DELAY = 1000;
 const SHORT_DELAY = 1000;
 
 const RIGHT_BTN_ID = 11;
@@ -33,12 +33,13 @@ exports.getPathFromCocktail = (station, cocktail) => {
     }
     console.log("movingDistance", movingDistance);
 
-    let path = [`${X_MOTOR_ID}:${X_DIS_1}:${X_MOTOR_SPEED}:${RIGHT_BTN_ID}:${MEDIUM_DELAY}`];
+    let path = [`${X_MOTOR_ID}:${X_DIS_1}:${X_MOTOR_SPEED}:${RIGHT_BTN_ID}:0`];
     for (let index = 0; index < movingDistance.length; index++) {
         path.push(`${X_MOTOR_ID}:${movingDistance[index]}:${X_MOTOR_SPEED}:${RIGHT_BTN_ID}:${MEDIUM_DELAY}`);
         path.push(`${Y_MOTOR_ID}:${-Y_DIS_1}:${X_MOTOR_SPEED}:${RIGHT_BTN_ID}:${LONG_DELAY}`);
         path.push(`${Y_MOTOR_ID}:${Y_DIS_1}:${Y_MOTOR_SPEED}:${BOTTOM_BTN_ID}:${MEDIUM_DELAY}`);
     }
+    path.push(`-1:${MEDIUM_DELAY}`);
 
     return path;
 }
