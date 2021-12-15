@@ -2,37 +2,31 @@
     {
         "name": "Test",
         "liquids": [
-            {
-                "name": "Wasser",
-                "amount": 1
-            },
-            {
-                "name": "Wasser",
-                "amount": 2
-            }
+            { "name": "Wasser", "amount": 1 },
+            { "name": "Wasser", "amount": 2 }
         ]
     },
-    {
-        "name": "Wasser",
-        "liquids": [
-            {
-                "name": "Wasser",
-                "amount": 1
-            }
-        ]
-    },
+    { "name": "Wasser", "liquids": [{ "name": "Wasser", "amount": 1 }] },
     {
         "name": "Rum Cola",
         "liquids": [
-            {
-                "name": "Rum",
-                "amount": 1
-            },
-            
-            {
-                "name": "Cola",
-                "amount": 3
-            }
+            { "name": "Rum", "amount": 1 },
+            { "name": "Cola", "amount": 3 }
+        ]
+    },
+    {
+        "name": "Rum Cola x2",
+        "liquids": [
+            { "name": "Cola", "amount": "6" },
+            { "name": "Rum", "amount": "2" }
+        ]
+    },
+    { "name": "Saurer shot", "liquids": [{ "name": "Saurer", "amount": "1" }] },
+    {
+        "name": "Gin Tonic",
+        "liquids": [
+            { "name": "Gin", "amount": "1" },
+            { "name": "Tonic", "amount": "3" }
         ]
     }
 ]

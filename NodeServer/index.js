@@ -12,8 +12,6 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 4242;
 
-const arduinoSerielPort = new SerialPort("COM5", { baudRate: 115200 });
-const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
 let curPathPos = 0;
 let curPath = [];
@@ -25,6 +23,9 @@ app.use(
     })
 );
 
+/*
+const arduinoSerielPort = new SerialPort("COM5", { baudRate: 115200 });
+const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
 try {
     arduinoSerielPort.on("open", () => {
@@ -59,13 +60,12 @@ try {
 } catch (error) {
     console.log("TEST");
 }
-
+*/
 
 let liquids = fs.readFileSync("./files/liquids.json", "utf8");
 let cocktails = [];
 let station = []; // ["", "", "Wasser", ""];
 
-console.log(liquids);
 
 /**
  * ENDPOINTS
@@ -76,6 +76,10 @@ app.get("/", (req, res) => {
     } else {
         res.sendFile(path.join(__dirname, "/web/configuration.html"));
     }
+});
+
+app.get("/configuration", (req, res) => {
+    res.sendFile(path.join(__dirname, "/web/configuration.html"));
 });
 
 app.post("/configuration", (req, res) => {
@@ -96,7 +100,11 @@ app.post("/configuration", (req, res) => {
 
     console.log(cocktails);
 
-    res.sendFile(path.join(__dirname, "/web/index.html"));
+    res.send(`
+        <script type="text/javascript">
+            window.location.href = "/";
+        </script>
+    `);
 });
 
 app.get("/request-cocktail", (req, res) => {
@@ -147,7 +155,7 @@ app.get("/request-cocktail", (req, res) => {
 /**
  * Redirects
  */
-redirect.setEndpoints(app);
+// redirect.setEndpoints(app);
 
 /**
  * Data endpoints
@@ -165,10 +173,51 @@ app.get("/get-liquids", (req, res) => {
  */
 resources.setEndpoints(app);
 
-app.post("/add-cocktail", (req, res) => {
+app.get("/add-cocktail", (req, res) => {
+    res.sendFile(path.join(__dirname, "/web/add-cocktail.html"));
+});
 
+app.post("/add-cocktail", (req, res) => {
+    let cocktail = {};
+    cocktail.name = req.body?.name;
+    let liquidCount = (Object.keys(req.body).length - 1) / 2;
+
+    console.log(req.body);
+    console.log("liquidCount", liquidCount);
+
+    cocktail.liquids = [];
+
+    for (let index = 0; index < liquidCount; index++) {
+        let liquid = {};
+        liquid.name = req.body["lname" + index];
+        liquid.amount = req.body["lamount" + index];
+        cocktail.liquids.push(liquid);
+
+        if(!liquids.includes(liquid.name)){
+            liquids = liquids.replace("]", ',"' + liquid.name + '"]');
+            fs.writeFileSync("./files/liquids.json", liquids);
+        }
+    }
+
+    let cocktailSrcFile = fs.readFileSync("./files/cocktails.json", "utf8");
+    let oldCocktails = JSON.parse(cocktailSrcFile);
+    oldCocktails.push(cocktail);
+    console.log(oldCocktails);
+
+    fs.writeFileSync("./files/cocktails.json", JSON.stringify(oldCocktails));
     
-    res.send(req.body);
+    cocktails = oldCocktails.filter((elem) => {
+        return elem.liquids.every((element) => {
+            console.log(element.name, station);
+            return station.includes(element.name);
+        });
+    });
+    
+    res.send(`
+        <script type="text/javascript">
+            window.location.href = "/";
+        </script>
+    `);
 });
 
 /**

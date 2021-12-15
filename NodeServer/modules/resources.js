@@ -12,4 +12,8 @@ exports.setEndpoints = function (app) {
     app.get("/scripts/main.js", (req, res) => {
         res.sendFile(path.join(__dirname, "../web/scripts/main.js"));
     });
+    
+    app.get("/scripts/addCocktail.js", (req, res) => {
+        res.sendFile(path.join(__dirname, "../web/scripts/addCocktail.js"));
+    });
 };
