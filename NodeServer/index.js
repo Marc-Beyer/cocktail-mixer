@@ -1,4 +1,6 @@
-const motorPath = require("./motorPath");
+const motorPath = require("./modules/motorPath");
+const resources = require("./modules/resources");
+const redirect = require("./modules/redirect");
 
 const express = require("express");
 const SerialPort = require("serialport");
@@ -10,8 +12,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 4242;
 
-const arduinoSerielPort = new SerialPort("COM3", { baudRate: 115200 });
-const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
+//const arduinoSerielPort = new SerialPort("COM3", { baudRate: 115200 });
+//const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
 let curPathPos = 0;
 let curPath = [];
@@ -23,6 +25,7 @@ app.use(
     })
 );
 
+/*
 try {
     arduinoSerielPort.on("open", () => {
         console.log("serial port open");
@@ -45,6 +48,7 @@ try {
 } catch (error) {
     console.log("TEST");
 }
+*/
 
 let liquids = fs.readFileSync("./files/liquids.json", "utf8");
 let cocktails = [];
@@ -132,13 +136,7 @@ app.get("/request-cocktail", (req, res) => {
 /**
  * Redirects
  */
-app.get("/configuration", (req, res) => {
-    res.send(`
-        <script type="text/javascript">
-            window.location.href = "/";
-        </script>
-        `);
-});
+redirect.setEndpoints(app);
 
 /**
  * Data endpoints
@@ -154,16 +152,12 @@ app.get("/get-liquids", (req, res) => {
 /**
  * Resources
  */
-app.get("/style/main.css", (req, res) => {
-    res.sendFile(path.join(__dirname, "/web/style/main.css"));
-});
+resources.setEndpoints(app);
 
-app.get("/scripts/configuration.js", (req, res) => {
-    res.sendFile(path.join(__dirname, "/web/scripts/configuration.js"));
-});
+app.post("/add-cocktail", (req, res) => {
 
-app.get("/scripts/main.js", (req, res) => {
-    res.sendFile(path.join(__dirname, "/web/scripts/main.js"));
+    
+    res.send(req.body);
 });
 
 /**

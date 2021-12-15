@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>New Cocktail</title>
+
+        <link rel="stylesheet" href="style/main.css" />
+        <script src="./scripts/addCocktail.js" defer></script>
+    </head>
+    <body>
+        <h1>New Cocktail</h1>
+        <form class="no-top-margin" action="/add-cocktail" method="post">
+            <label>
+                <input name="name" type="text" placeholder="cocktailname" required/>
+            </label>
+            <div class="labels">
+                <div id="liqList">
+                    <label>
+                        liquid 1
+                        <div>
+                            <input
+                                name="lname"
+                                type="text"
+                                placeholder="liquidname"
+                            />
+                            <input
+                                name="lamount"
+                                type="number"
+                                placeholder="amount"
+                            />
+                        </div>
+                    </label>
+
+                    <label>
+                        liquid 1
+                        <div>
+                            <input
+                                name="lname"
+                                type="text"
+                                placeholder="liquidname"
+                            />
+                            <input
+                                name="lamount"
+                                type="number"
+                                placeholder="amount"
+                            />
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <button id="add-btn">add liquid</button>
+            <input type="submit" value="create cocktail">
+        </form>
+        <br>
+        <br>
+        <br>
+    </body>
+</html>
