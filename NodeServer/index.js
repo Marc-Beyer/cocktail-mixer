@@ -23,7 +23,6 @@ app.use(
     })
 );
 
-/*
 const arduinoSerielPort = new SerialPort("COM5", { baudRate: 115200 });
 const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
@@ -60,7 +59,7 @@ try {
 } catch (error) {
     console.log("TEST");
 }
-*/
+
 
 let liquids = fs.readFileSync("./files/liquids.json", "utf8");
 let cocktails = [];
