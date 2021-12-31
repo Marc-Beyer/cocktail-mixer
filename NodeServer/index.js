@@ -23,7 +23,7 @@ app.use(
     })
 );
 
-const arduinoSerielPort = new SerialPort("COM5", { baudRate: 115200 });
+const arduinoSerielPort = new SerialPort("COM6", { baudRate: 115200 });
 const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
 try {

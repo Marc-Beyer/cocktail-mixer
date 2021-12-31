@@ -45,9 +45,9 @@ int xMotorPorts[4] = {39, 38, 41, 40};
 int yMotorPorts[4] = {47, 46, 49, 48};
  */
 
-//int xMotorPorts[4] = {1, 4, 2, 3};
+// int xMotorPorts[4] = {1, 4, 2, 3};
 int xMotorPorts[4] = {3, 2, 5, 4};
-//int xMotorPorts[4] = {2, 3, 4, 5};
+// int xMotorPorts[4] = {2, 3, 4, 5};
 int yMotorPorts[4] = {7, 6, 9, 8};
 
 // Drinks
@@ -65,30 +65,30 @@ typedef struct {
 #define Y_DIV 675
 #define Y_DIV_1 950
 
-Task drink_ginTonic[12] = {{X_MOTOR_ID, X_DIV_1,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
-                           {Y_MOTOR_ID, -Y_DIV_1, Y_MOTOR_SPEED, RIGHT_BTN_ID,  6000},
-                           {Y_MOTOR_ID, Y_DIV_1,  Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
-                           {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
-                           {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  5000},
-                           {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
-                           {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
-                           {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  5000},
-                           {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
-                           {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
-                           {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  5000},
-                           {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000}};
+Task drink_ginTonic[12] = {
+    {X_MOTOR_ID, X_DIV_1, X_MOTOR_SPEED, RIGHT_BTN_ID, 2000},
+    {Y_MOTOR_ID, -Y_DIV_1, Y_MOTOR_SPEED, RIGHT_BTN_ID, 6000},
+    {Y_MOTOR_ID, Y_DIV_1, Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
+    {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 2000},
+    {Y_MOTOR_ID, -Y_DIV, Y_MOTOR_SPEED, RIGHT_BTN_ID, 5000},
+    {Y_MOTOR_ID, Y_DIV, Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
+    {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 2000},
+    {Y_MOTOR_ID, -Y_DIV, Y_MOTOR_SPEED, RIGHT_BTN_ID, 5000},
+    {Y_MOTOR_ID, Y_DIV, Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000},
+    {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 2000},
+    {Y_MOTOR_ID, -Y_DIV, Y_MOTOR_SPEED, RIGHT_BTN_ID, 5000},
+    {Y_MOTOR_ID, Y_DIV, Y_MOTOR_SPEED, BOTTOM_BTN_ID, 2000}};
 
-Task drink_water[4] = {{X_MOTOR_ID, X_DIV_1,  X_MOTOR_SPEED, RIGHT_BTN_ID,  0},
-                       {X_MOTOR_ID, X_DIV_2,  X_MOTOR_SPEED, RIGHT_BTN_ID,  2000},
-                       {Y_MOTOR_ID, -Y_DIV,   Y_MOTOR_SPEED, RIGHT_BTN_ID,  6000},
-                       {Y_MOTOR_ID, Y_DIV,    Y_MOTOR_SPEED, BOTTOM_BTN_ID, 4000}};
-                       
-Task drink_abstandTest[4] = {{X_MOTOR_ID, X_DIV_1, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
-                             {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
-                             {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
-                             {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000}};
+Task drink_water[4] = {{X_MOTOR_ID, X_DIV_1, X_MOTOR_SPEED, RIGHT_BTN_ID, 0},
+                       {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 2000},
+                       {Y_MOTOR_ID, -Y_DIV, Y_MOTOR_SPEED, RIGHT_BTN_ID, 6000},
+                       {Y_MOTOR_ID, Y_DIV, Y_MOTOR_SPEED, BOTTOM_BTN_ID, 4000}};
 
-                       
+Task drink_abstandTest[4] = {
+    {X_MOTOR_ID, X_DIV_1, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
+    {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
+    {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000},
+    {X_MOTOR_ID, X_DIV_2, X_MOTOR_SPEED, RIGHT_BTN_ID, 4000}};
 
 Task *curTasks;
 int curTask;
@@ -194,11 +194,11 @@ void stateControlledHandler() {
 
             delay(delayAfter);
             Serial.println(getPosition(motorId));
-        
+
             motorId = -1;
         } else if (motorState == 1 || motorState == -1) {
             shutdownMotor(motorId);
-            
+
             delay(delayAfter);
             Serial.println(getPosition(motorId));
 
@@ -235,6 +235,7 @@ void stateControlledHandler() {
 void stateTestHandler() {
     if (changedState) {
         changedState = false;
+        Serial.println("BLLLLLLAAAAAA");
     }
 
     if (bd_getButton(LEFT_BTN_ID) == LOW) {
@@ -366,7 +367,8 @@ void stateReadyHandler() {
 
                 curTasks = drink_abstandTest;
                 curTask = 0;
-                taskLength = sizeof(drink_abstandTest) / sizeof(drink_abstandTest[0]);
+                taskLength =
+                    sizeof(drink_abstandTest) / sizeof(drink_abstandTest[0]);
 
                 changedState = true;
                 state = STATE_WORKING;
