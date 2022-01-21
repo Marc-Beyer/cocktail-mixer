@@ -235,7 +235,6 @@ void stateControlledHandler() {
 void stateTestHandler() {
     if (changedState) {
         changedState = false;
-        Serial.println("BLLLLLLAAAAAA");
     }
 
     if (bd_getButton(LEFT_BTN_ID) == LOW) {
