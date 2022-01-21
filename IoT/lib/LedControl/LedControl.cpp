@@ -97,6 +97,12 @@ void smoothColors() {
     }
 }
 
+void highlight(long spot) {
+    for (uint16_t pixelId = 0; pixelId < strip.numPixels(); pixelId++) {
+        strip.setPixelColor(pixelId, 0);
+    }
+}
+
 void setupLeds() {
     randomSeed(analogRead(0));
 
@@ -114,7 +120,7 @@ long nextProgramTime = 0;
 
 void loopLeds() {
     if (nextProgramTime < millis()) {
-        programNr = random(4);
+        programNr = random(5);
         // Reset all pixel
         for (uint16_t pixelId = 0; pixelId < strip.numPixels(); pixelId++) {
             strip.setPixelColor(pixelId, 0);

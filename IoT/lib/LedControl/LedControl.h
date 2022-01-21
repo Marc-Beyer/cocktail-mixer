@@ -10,6 +10,8 @@ void fourRegions();
 void runTColor();
 void smoothColors();
 
+void highlight(long spot);
+
 void setupLeds();
 void loopLeds();
 

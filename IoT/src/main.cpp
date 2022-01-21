@@ -175,10 +175,17 @@ void stateControlledHandler() {
         sscanf(buffer, "%d:%d:%d:%d:%d", &motorId, &steps, &speed,
                &interruptBtnId, &delayAfter);
 
+        Serial.println("");
+        Serial.print("id: ");
         Serial.print(motorId);
-        Serial.print(steps);
-        Serial.print(speed);
+        Serial.print(" inter: ");
         Serial.print(interruptBtnId);
+        Serial.print(" speed: ");
+        Serial.print(speed);
+        Serial.print(" steps: ");
+        Serial.print(steps);
+        Serial.print(" pos: ");
+        Serial.print(getPosition(motorId));
 
         if (motorId == -1 && steps >= 0) {
             changedState = false;
