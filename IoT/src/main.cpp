@@ -1,6 +1,7 @@
-#include <ButtonDebouncedCalloc.h>
+#include <Arduino.h>
 
-#include "MultiStepper.h"
+#include <ButtonDebouncedCalloc.h>
+#include <MultiStepper.h>
 
 // stepper distances
 #define X_DIST_1 200
@@ -20,17 +21,15 @@
 #define STATE_CONTROLLED 42
 
 // Micro switch buttons
-#define LEFT_BTN_ID 0
-#define LEFT_BTN_GPIO 10
+#define LEFT_BTN_ID     0
+#define RIGHT_BTN_ID    1
+#define BOTTOM_BTN_ID   2
+#define TOP_BTN_ID      3
 
-#define RIGHT_BTN_ID 1
-#define RIGHT_BTN_GPIO 11
-
-#define BOTTOM_BTN_ID 2
-#define BOTTOM_BTN_GPIO 12
-
-#define TOP_BTN_ID 3
-#define TOP_BTN_GPIO 13
+#define LEFT_BTN_GPIO   13
+#define RIGHT_BTN_GPIO  4
+#define BOTTOM_BTN_GPIO 21
+#define TOP_BTN_GPIO    22
 
 // Stepper motors
 #define X_MOTOR_ID 0
@@ -40,15 +39,10 @@
 #define Y_MOTOR_SPEED 1
 #define Y_MOTOR_CONF_SPEED 6
 
-/*
-int xMotorPorts[4] = {39, 38, 41, 40};
-int yMotorPorts[4] = {47, 46, 49, 48};
- */
-
-// int xMotorPorts[4] = {1, 4, 2, 3};
-int xMotorPorts[4] = {3, 2, 5, 4};
-// int xMotorPorts[4] = {2, 3, 4, 5};
-int yMotorPorts[4] = {7, 6, 9, 8};
+// Stepper GPIOs 32 33 25 26
+int xMotorPorts[4] = {33, 32, 26, 25};
+// Stepper GPIOs 19 18 17 16
+int yMotorPorts[4] = {18, 19, 16, 17};
 
 // Drinks
 typedef struct {
@@ -94,6 +88,11 @@ Task *curTasks;
 int curTask;
 int taskLength;
 
+// State machine
+int state = STATE_TEST;
+// int state = STATE_READY;
+bool changedState = true;
+
 void setup() {
     Serial.begin(115200);
 
@@ -132,43 +131,6 @@ void setup() {
                        ? "          successful        |"
                        : "            error           |");
     Serial.println("|==============================================|");
-}
-
-// State machine
-int state = STATE_TEST;
-// int state = STATE_READY;
-bool changedState = true;
-
-void loop() {
-    switch (state) {
-        case STATE_ERROR:
-            stateErrorHandler();
-            break;
-
-        case STATE_CALIBRATE:
-            stateCalibrateHandler();
-            break;
-
-        case STATE_READY:
-            stateReadyHandler();
-            break;
-
-        case STATE_WORKING:
-            stateWorkingHandler();
-            break;
-
-        case STATE_TEST:
-            stateTestHandler();
-            break;
-
-        case STATE_CONTROLLED:
-            stateControlledHandler();
-            break;
-
-        default:
-            state = STATE_ERROR;
-            break;
-    }
 }
 
 // The arduino is listening on thr serial port and
@@ -423,5 +385,37 @@ void stateWorkingHandler() {
         } else {
             setStepsToGo(curTasks[curTask].motorId, curTasks[curTask].steps);
         }
+    }
+}
+
+void loop() {
+    switch (state) {
+        case STATE_ERROR:
+            stateErrorHandler();
+            break;
+
+        case STATE_CALIBRATE:
+            stateCalibrateHandler();
+            break;
+
+        case STATE_READY:
+            stateReadyHandler();
+            break;
+
+        case STATE_WORKING:
+            stateWorkingHandler();
+            break;
+
+        case STATE_TEST:
+            stateTestHandler();
+            break;
+
+        case STATE_CONTROLLED:
+            stateControlledHandler();
+            break;
+
+        default:
+            state = STATE_ERROR;
+            break;
     }
 }
