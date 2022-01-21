@@ -12,7 +12,6 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 4242;
 
-
 let curPathPos = 0;
 let curPath = [];
 
@@ -23,7 +22,7 @@ app.use(
     })
 );
 
-const arduinoSerielPort = new SerialPort("COM6", { baudRate: 115200 });
+const arduinoSerielPort = new SerialPort("COM5", { baudRate: 115200 });
 const parser = arduinoSerielPort.pipe(new Readline({ delimiter: "\n" }));
 
 try {
@@ -34,7 +33,7 @@ try {
     parser.on("data", (data) => {
         console.log("Data from Arduino:", data);
 
-        if(data.startsWith("Choose a cocktail")){
+        if (data.startsWith("Choose a cocktail")) {
             console.log("Send to Arduino: 42");
             arduinoSerielPort.write("42", function (err) {
                 if (err) {
@@ -60,11 +59,9 @@ try {
     console.log("TEST");
 }
 
-
 let liquids = fs.readFileSync("./files/liquids.json", "utf8");
 let cocktails = [];
 let station = []; // ["", "", "Wasser", ""];
-
 
 /**
  * ENDPOINTS
@@ -192,7 +189,7 @@ app.post("/add-cocktail", (req, res) => {
         liquid.amount = req.body["lamount" + index];
         cocktail.liquids.push(liquid);
 
-        if(!liquids.includes(liquid.name)){
+        if (!liquids.includes(liquid.name)) {
             liquids = liquids.replace("]", ',"' + liquid.name + '"]');
             fs.writeFileSync("./files/liquids.json", liquids);
         }
@@ -204,14 +201,14 @@ app.post("/add-cocktail", (req, res) => {
     console.log(oldCocktails);
 
     fs.writeFileSync("./files/cocktails.json", JSON.stringify(oldCocktails));
-    
+
     cocktails = oldCocktails.filter((elem) => {
         return elem.liquids.every((element) => {
             console.log(element.name, station);
             return station.includes(element.name);
         });
     });
-    
+
     res.send(`
         <script type="text/javascript">
             window.location.href = "/";

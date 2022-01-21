@@ -1,6 +1,6 @@
 #include <Arduino.h>
-
 #include <ButtonDebouncedCalloc.h>
+#include <LedControl.h>
 #include <MultiStepper.h>
 
 // stepper distances
@@ -21,15 +21,15 @@
 #define STATE_CONTROLLED 42
 
 // Micro switch buttons
-#define LEFT_BTN_ID     0
-#define RIGHT_BTN_ID    1
-#define BOTTOM_BTN_ID   2
-#define TOP_BTN_ID      3
+#define LEFT_BTN_ID 0
+#define RIGHT_BTN_ID 1
+#define BOTTOM_BTN_ID 2
+#define TOP_BTN_ID 3
 
-#define LEFT_BTN_GPIO   13
-#define RIGHT_BTN_GPIO  4
+#define LEFT_BTN_GPIO 13
+#define RIGHT_BTN_GPIO 4
 #define BOTTOM_BTN_GPIO 21
-#define TOP_BTN_GPIO    22
+#define TOP_BTN_GPIO 22
 
 // Stepper motors
 #define X_MOTOR_ID 0
@@ -95,6 +95,7 @@ bool changedState = true;
 
 void setup() {
     Serial.begin(115200);
+    setupLeds();
 
     Serial.println("|================================================|");
     Serial.println("|  Cocktailmixer v1.1.0 by Marc, Marco and Alex  |");
@@ -389,6 +390,8 @@ void stateWorkingHandler() {
 }
 
 void loop() {
+    loopLeds();
+
     switch (state) {
         case STATE_ERROR:
             stateErrorHandler();
