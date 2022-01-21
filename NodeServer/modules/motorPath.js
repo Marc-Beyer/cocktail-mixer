@@ -14,8 +14,8 @@ const LONG_DELAY = 4000;
 const MEDIUM_DELAY = 1000;
 const SHORT_DELAY = 1000;
 
-const RIGHT_BTN_ID = 4;
-const BOTTOM_BTN_ID = 21;
+const RIGHT_BTN_ID = 1;
+const BOTTOM_BTN_ID = 2;
 
 exports.getPathFromCocktail = (station, cocktail) => {
     let positions = [];
